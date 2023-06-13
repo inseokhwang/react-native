@@ -11,7 +11,6 @@ react_native_path = File.join(__dir__, "..", "..")
 # package.json
 package = JSON.parse(File.read(File.join(react_native_path, "package.json")))
 version = package['version']
-version = "0.72.0-rc.5"
 
 # sdks/.hermesversion
 hermestag_file = File.join(react_native_path, "sdks", ".hermesversion")
@@ -65,11 +64,11 @@ Pod::Spec.new do |spec|
     # test something specific for that tarball.
     if source[:http].include?('https://repo1.maven.org/')
       spec.script_phase = {
-        :name => "[Hermes] Download Hermes for the right configuration, if needed",
+        :name => "[Hermes] Replace Hermes for the right configuration, if needed",
         :execution_position => :before_compile,
         :script => <<-EOS
         . "$REACT_NATIVE_PATH/scripts/xcode/with-environment.sh"
-        "$NODE_BINARY" "$REACT_NATIVE_PATH/sdks/hermes-engine/utils/replace_hermes_version.js" -c "$CONFIGURATION" -r "#{version}"
+        "$NODE_BINARY" "$REACT_NATIVE_PATH/sdks/hermes-engine/utils/replace_hermes_version.js" -c "$CONFIGURATION" -r "#{version}" -p "$REACT_NATIVE_PATH"
         EOS
       }
     end

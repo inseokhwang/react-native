@@ -33,7 +33,7 @@ function shouldReplaceHermesConfiguration(configuration) {
 
   if (fileExists) {
     console.log(`Found ${LAST_BUILD_FILENAME} file`);
-    const oldConfiguration = fs.readFileSync(LAST_BUILD_FILENAME);
+    const oldConfiguration = fs.readFileSync(LAST_BUILD_FILENAME).toString();
     if (oldConfiguration === configuration) {
       console.log('No need to download a new build of Hermes!');
       return false;
@@ -54,7 +54,7 @@ function shouldReplaceHermesConfiguration(configuration) {
 function replaceHermesConfiguration(configuration, version, reactNativePath) {
   const tarballURLPath = `${reactNativePath}/sdks/downloads/hermes-ios-${version}-${configuration}.tar.gz`;
 
-  const finalLocation = 'Pods/hermes-engine';
+  const finalLocation = 'hermes-engine';
   console.log('Preparing the final location');
   fs.rmSync(finalLocation, {force: true, recursive: true});
   fs.mkdirSync(finalLocation, {recursive: true});
@@ -77,6 +77,7 @@ function main(configuration, version, reactNativePath) {
 
   replaceHermesConfiguration(configuration, version, reactNativePath);
   updateLastBuildConfiguration(configuration);
+  console.log('Done replacing hermes-engine');
 }
 
 // This script is executed in the Pods folder, which is usually not synched to Github, so it should be ok
@@ -101,5 +102,4 @@ const configuration = argv.configuration;
 const version = argv.reactNativeVersion;
 const reactNativePath = argv.reactNativePath;
 
-throw new Error(`React native path is: ${reactNativePath}`);
 main(configuration, version, reactNativePath);
